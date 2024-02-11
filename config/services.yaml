@@ -20,5 +20,13 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    App\Email\EmailHelper: ~
+    App\Email\EmailHelperInterface: '@App\Email\EmailHelper'
+
+    App\Email\EmailSender:
+        arguments:
+            $mailer: '@mailer.mailer'
+            $senderEmail: '%env(MAIL_FROM)%'
+            $senderName: '%env(MAIL_FROM_NAME)%'
+
+    App\Email\EmailSenderInterface: '@App\Email\EmailSender'

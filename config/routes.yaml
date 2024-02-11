@@ -1,5 +1,38 @@
-controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
+api_persons_list:
+    path:       /api/persons
+    controller: App\Controller\API\PersonsController::list
+    methods:    GET
+    defaults:
+        _format: json
+
+api_persons_show:
+    path:       /api/persons/{id}
+    controller: App\Controller\API\PersonsController::show
+    methods:    GET
+    defaults:
+        _format: json
+    requirements:
+        id: '\d+'
+
+api_persons_edit:
+    path:       /api/persons/{id}
+    controller: App\Controller\API\PersonsController::edit
+    methods:    [PUT, PATCH]
+    defaults:
+        _format: json
+    requirements:
+        id: '\d+'
+
+api_persons_new:
+    path:       /api/persons
+    controller: App\Controller\API\PersonsController::new
+    methods:    POST
+    defaults:
+        _format: json
+
+api_persons_delete:
+    path:       /api/persons/{id}
+    controller: App\Controller\API\PersonsController::delete
+    methods:    DELETE
+    requirements:
+        id: '\d+'

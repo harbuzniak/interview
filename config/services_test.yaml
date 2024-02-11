@@ -1,0 +1,10 @@
+parameters:
+
+services:
+    _defaults:
+        autowire: true
+        public: true
+
+    App\Tests\Functional\EmailSenderDummy: ~
+
+    App\Email\EmailSenderInterface: '@App\Tests\Functional\EmailSenderDummy'

@@ -1,0 +1,80 @@
+version: '3.4'
+
+x-worker-template: &worker_template
+  build:
+    context: ../
+    target: app_php
+  env_file:
+    - ../.env
+  environment:
+    APP_ENV: prod
+    WAIT_APP: 1
+    APP_HOST: php
+    WAIT_RABBIT: 1
+    RABBITMQ_HOST: 'rabbitmq'
+    RABBITMQ_PORT: '5672'
+  healthcheck:
+    disable: true
+  depends_on:
+    - rabbitmq
+    - postgres
+  restart: unless-stopped
+  networks:
+    - interview_network
+
+services:
+  php:
+    build:
+      context: ../
+      target: app_php
+    env_file:
+      - ../.env
+    environment:
+      APP_ENV: prod
+    depends_on:
+      - postgres
+    networks:
+      - interview_network
+    restart: unless-stopped
+
+  nginx:
+    build:
+      context: ../
+      target: app_nginx
+    depends_on:
+      - php
+    networks:
+      - interview_network
+    restart: unless-stopped
+    ports:
+      - 8088:80
+
+  rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: 'guest'
+      RABBITMQ_DEFAULT_PASS: 'guest'
+    networks:
+      - interview_network
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15.2-alpine
+    environment:
+      - POSTGRES_DB=interview
+      - POSTGRES_USER=interview
+      - POSTGRES_PASSWORD=test123
+    networks:
+      - interview_network
+    restart: unless-stopped
+
+  worker_urgent:
+    <<: *worker_template
+    command: 'bin/console messenger:consume urgent -vvv --limit=30 --time-limit=90'
+
+  worker_standard:
+    <<: *worker_template
+    command: 'bin/console messenger:consume standard -vvv --limit=30 --time-limit=90'
+
+networks:
+  interview_network:

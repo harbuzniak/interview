@@ -1,0 +1,21 @@
+framework:
+    messenger:
+        reset_on_message: true
+        transports:
+            urgent:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: urgent
+                    queues:
+                        messages_urgent: ~
+            standard:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: standard
+                    queues:
+                        messages_standard: ~
+
+        routing:
+            App\Message\SendEmailMessage: urgent
