@@ -57,6 +57,9 @@ services:
     networks:
       - interview_network
     restart: unless-stopped
+    ports:
+      - 5672:5672
+      - 15672:15672
 
   postgres:
     image: postgres:15.2-alpine
@@ -67,6 +70,10 @@ services:
     networks:
       - interview_network
     restart: unless-stopped
+    volumes:
+      - interview_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
 
   worker_urgent:
     <<: *worker_template
@@ -78,3 +85,7 @@ services:
 
 networks:
   interview_network:
+
+volumes:
+    interview_data:
+        driver: local

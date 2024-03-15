@@ -30,3 +30,8 @@ services:
             $senderName: '%env(MAIL_FROM_NAME)%'
 
     App\Email\EmailSenderInterface: '@App\Email\EmailSender'
+
+
+    App\Service\Schedulable\SchedulableHolder:
+        calls:
+            - ['addItem', ['@App\MessageHandler\SchedulledExampleMessageHandler']]

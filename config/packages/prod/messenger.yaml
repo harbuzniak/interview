@@ -19,3 +19,4 @@ framework:
 
         routing:
             App\Message\SendEmailMessage: urgent
+            App\Message\SchedulledExampleMessage: standard
